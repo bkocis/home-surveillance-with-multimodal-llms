@@ -1,0 +1,9 @@
+llama-index
+qdrant_client
+torch
+transformers
+pypdf2
+pypdf
+ollama
+
+opencv-python
