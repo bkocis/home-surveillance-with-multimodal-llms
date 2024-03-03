@@ -1,8 +1,7 @@
 import cv2
 import ollama
-import time
 import sys
-import math
+import datetime
 
 
 def query_the_image(query: str, image_list: list[str]) -> ollama.chat:
@@ -11,9 +10,9 @@ def query_the_image(query: str, image_list: list[str]) -> ollama.chat:
             model='llava:7b-v1.6-mistral-q2_K',
             messages=[
                 {
-                'role': 'user',
-                'content':query,
-                'images': image_list,
+                    'role': 'user',
+                    'content': query,
+                    'images': image_list,
                 }
             ]
         )
@@ -21,15 +20,6 @@ def query_the_image(query: str, image_list: list[str]) -> ollama.chat:
         print(f"Error: {e}")
         return None
     return res['message']['content']
-
-
-# def capture_scene(cap):
-#     print("Capturing initial scene description....")
-#     ret, frame = cap.read()
-#     image = [cv2.imencode('.jpg', frame)[1].tobytes()]
-#     response = query_the_image("What do you see on the image", image)
-#     print("Capturing initial scene description....done!")
-#     return response
 
 
 def observe_scene_change(initial_scene: str, image):
@@ -49,15 +39,13 @@ def observe_scene_change(initial_scene: str, image):
 def print_out_the_response(query_message: str, image_list: list[str]) -> None:
     response = query_the_image(query_message, image_list)
     if response:
-        print(response)
+        print(f"{str(datetime.datetime.now())}, {response}")
         sys.stdout.flush()
         sys.stdout.write("\n")
+    return response
 
 
 def display_image(cap):
-    if not cap.isOpened():
-        print("Unable to read camera feed")
-
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -74,8 +62,10 @@ def image_processing_function(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # cv2.imshow('Webcam Live', gray)
     image = [cv2.imencode('.jpg', gray)[1].tobytes()]
-    initial_scene = print_out_the_response("what is on the image?", image_list=image)
+    # scene_description = print_out_the_response("what is on the image?", image_list=image)
     # observe_scene_change(initial_scene=initial_scene, image=image)
+    print_out_the_response("Is there something dangerous going on in the image? Answer with yes or no!",
+                           image_list=image)
 
 
 def frame_generator(cap):
@@ -88,9 +78,10 @@ def frame_generator(cap):
         yield frame_number, frame
 
 
-def display_frame_generator(cap, image_processing_function):
+def display_frame_generator(cap, image_processing_function, every_nth_second):
+    frame_rate = 30
     for frame_number, frame in frame_generator(cap):
-        if frame_number % 30 == 0:
+        if frame_number % (every_nth_second * frame_rate) == 0:
             image_processing_function(frame)
 
 
@@ -99,28 +90,12 @@ if __name__ == "__main__":
     if not cap.isOpened():
         raise IOError("Cannot open webcam")
 
-    # scene_description = capture_scene(cap)
+    # display_image(cap)  # for visual debugging
 
-    # display_image(cap)
-    display_frame_generator(cap, image_processing_function=image_processing_function)
-
-    #observe_scene_change(initial_scene=scene_description)
-
+    display_frame_generator(cap, image_processing_function=image_processing_function, every_nth_second=5)
 
 
 """
-# Display the resulting frame
-# cv2.imshow('Input', frame)
-
-# Wait for the user to press any key
-cv2.waitKey(0)
-
-# When everything done, release the capture and destroy the windows
-cap.release()
-cv2.destroyAllWindows()
-
-
-import cv2
 import concurrent.futures
 
 def process_frame(frame):
