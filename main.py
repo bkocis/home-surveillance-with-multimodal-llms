@@ -45,7 +45,7 @@ def print_out_the_response(query_message: str, image_list: list[str]) -> None:
     return response
 
 
-def display_image(cap):
+def display_image(cap: cv2.VideoCapture):
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -68,7 +68,7 @@ def image_processing_function(frame):
                            image_list=image)
 
 
-def frame_generator(cap):
+def frame_generator(cap: cv2.VideoCapture):
     frame_number = 0
     while True:
         ret, frame = cap.read()
@@ -78,7 +78,7 @@ def frame_generator(cap):
         yield frame_number, frame
 
 
-def display_frame_generator(cap, image_processing_function, every_nth_second):
+def display_frame_generator(cap: cv2.VideoCapture, image_processing_function: callable, every_nth_second: int):
     frame_rate = 30
     for frame_number, frame in frame_generator(cap):
         if frame_number % (every_nth_second * frame_rate) == 0:
