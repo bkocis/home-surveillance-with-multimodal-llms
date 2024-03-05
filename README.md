@@ -5,6 +5,13 @@
 
 __Can LLMs be used to analyze video feed?__
 
+Models
+======
+
+- [LlaVa with ollama](https://ollama.com/library/llava)
+- [Moondream2 with transformers](https://github.com/vikhyat/moondream)
+  
+
 #### Description
 
 A video stream from a web-camera is fed into a multimodal LLM. Every nth frame is then captioned. Additional questions can be 
