@@ -57,17 +57,6 @@ def print_out_the_response(query_message: str, image_list: list[str]):
     return response
 
 
-def display_image(cap: cv2.VideoCapture) -> None:
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Can't receive frame (stream end?). Exiting ...")
-            break
-        cv2.imshow('Webcam Live', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-
 def image_processing_function(frame) -> None:
     # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     image = [cv2.imencode('.jpg', frame)[1].tobytes()]
@@ -79,20 +68,31 @@ def pass_image_to_llava(image) -> None:
     observe_scene_change(initial_scene=scene_description, image=image)
 
 
-def frame_generator(cap: cv2.VideoCapture):
+def frame_generator(cap: cv2.VideoCapture, debug_show_image: bool):
+    """
+    This function reads the data from the camera and yields them frame-by-frame
+    :param cap:
+    :param debug_show_image: set to True for visual debugging
+    :yield: frame and frame counter
+    """
     frame_number = 0
     while True:
         ret, frame = cap.read()
         if not ret:
             break
         frame_number += 1
+        if debug_show_image:
+            cv2.imshow('Webcam Live', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
         yield frame_number, frame
 
 
 def display_frame_generator(
-        cap: cv2.VideoCapture, image_processing_function: callable, every_nth_second: int) -> None:
+        cap: cv2.VideoCapture, image_processing_function: callable, every_nth_second: int, debug_show_image: bool
+) -> None:
     frame_rate = 30
-    for frame_number, frame in frame_generator(cap):
+    for frame_number, frame in frame_generator(cap, debug_show_image):
         if frame_number % (every_nth_second * frame_rate) == 0:
             image_processing_function(frame)
 
@@ -102,8 +102,10 @@ if __name__ == "__main__":
     if not cap.isOpened():
         raise IOError("Cannot open webcam")
     evaluate_a_frame_in_n_seconds = 1
+
     display_frame_generator(
         cap,
         image_processing_function=image_processing_function,
-        every_nth_second=evaluate_a_frame_in_n_seconds
+        every_nth_second=evaluate_a_frame_in_n_seconds,
+        debug_show_image=True
     )
