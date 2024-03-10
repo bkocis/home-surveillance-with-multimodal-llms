@@ -1,0 +1,8 @@
+FROM llava:7b-v1.6-mistral-q2_K
+
+PARAMETER temperature 0.1
+# sets the context window size to 4096, this controls how many tokens the LLM can use as context to generate the next token
+PARAMETER num_ctx 4096
+
+# sets a custom system message to specify the behavior of the chat assistant
+# SYSTEM You are a friendly, helpful assistant.
