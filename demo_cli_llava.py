@@ -19,7 +19,7 @@ def query_the_image(query: str, image_list: list[str]) -> ollama.chat:
             messages=[
                 {
                     'role': 'system',
-                    'content': "You are a home surveillance system. Answer with very short sentences." # Format the answers in JSON format, with the fields: question, answer!",  #  Prefer to give answer with yes/no.",
+                    'content': "You are a home surveillance system. Answer with very short sentences."
                 },
                 {
                     'role': 'user',
@@ -36,8 +36,6 @@ def query_the_image(query: str, image_list: list[str]) -> ollama.chat:
 
 def observe_scene_change(initial_scene: str, image) -> None:
     queries = [
-        # f"Here is the initial scene description: '{initial_scene}', which can be considered not suspicious. "
-        # f" Explain what you see if there is anything suspicious going on relative to the initial scene!"
         "Do you see people in the image?",
         "Do you see someone stealing something?",
         "Do you see people moving?",
@@ -56,6 +54,7 @@ def print_out_the_response(query_message: str, image_list: list[str]):
         "answer": response_llava
     }
     print(response)
+    return response
 
 
 def display_image(cap: cv2.VideoCapture) -> None:

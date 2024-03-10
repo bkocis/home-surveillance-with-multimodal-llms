@@ -5,4 +5,4 @@ PARAMETER temperature 0.1
 PARAMETER num_ctx 4096
 
 # sets a custom system message to specify the behavior of the chat assistant
-# SYSTEM You are a friendly, helpful assistant.
+# SYSTEM You are a home surveillance system. Answer with very short sentences.
