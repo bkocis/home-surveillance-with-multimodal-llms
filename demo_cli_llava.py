@@ -107,5 +107,5 @@ if __name__ == "__main__":
         cap,
         image_processing_function=image_processing_function,
         every_nth_second=evaluate_a_frame_in_n_seconds,
-        debug_show_image=True
+        debug_show_image=False
     )
