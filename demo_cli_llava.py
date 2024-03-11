@@ -101,7 +101,7 @@ if __name__ == "__main__":
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise IOError("Cannot open webcam")
-    evaluate_a_frame_in_n_seconds = 1
+    evaluate_a_frame_in_n_seconds = 5
 
     display_frame_generator(
         cap,

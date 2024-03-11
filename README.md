@@ -9,7 +9,7 @@ Models
 ======
 
 - [LlaVa with ollama](https://ollama.com/library/llava)
-- [Moondream2 with transformers](https://github.com/vikhyat/moondream)
+- [Moondream2 with transformers](https://github.com/vikhyat/moondream) (to be added)
   
 
 #### Description
